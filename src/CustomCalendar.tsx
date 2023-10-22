@@ -1,34 +1,49 @@
 import dayjs from "dayjs";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Indicator } from "@mantine/core";
 import { DatePicker } from "@mantine/dates";
 
 const CustomCalendar = () => {
-  // list of selected dates
   const [selected, setSelected] = useState<Date[]>([]);
-  // list of indicator dates
   const [indicated, setIndicated] = useState<Date[]>([]);
 
-  const handleSelected = (inputDate: Date) => {
-    const isSelected = selected.some((s) => dayjs(inputDate).isSame(s, "date"));
+  useEffect(() => {
+    console.log("selected is now: ", selected);
+  }, [selected]);
 
-    const isIndicated = selected.some((s) =>
+  useEffect(() => {
+    console.log("indicated is now: ", indicated);
+  }, [indicated]);
+
+  const handleSelected = (inputDate: Date) => {
+    // check if the clicked inputDate is in Selected or Indicated
+    const isSelected = selected.some((s) => dayjs(inputDate).isSame(s, "date"));
+    const isIndicated = indicated.some((s) =>
       dayjs(inputDate).isSame(s, "date")
     );
 
-    if (isSelected) {
+    console.log("isSelected: ", isSelected, "isIndicated: ", isIndicated);
+
+    // if not both, newbie
+    if (!isSelected && !isIndicated) {
+      console.log("null -> selected");
+      setSelected([...selected, inputDate]);
+    } else if (isSelected) {
+      console.log("selected -> indicated");
+      // Remove from Selected array
       const newSelected = selected.filter(
         (s) => !dayjs(inputDate).isSame(s, "date")
       );
       setSelected(newSelected);
+      console.log("Add to indicated array");
       setIndicated([...indicated, inputDate]);
     } else if (isIndicated) {
+      console.log("indicated -> null");
+      // Remove from Indicated array
       const newIndicated = indicated.filter(
         (s) => !dayjs(inputDate).isSame(s, "date")
       );
       setIndicated(newIndicated);
-    } else {
-      setSelected([...selected, inputDate]);
     }
   };
 
@@ -56,7 +71,6 @@ const CustomCalendar = () => {
           onClick: () => handleSelected(date),
         })}
       />
-      ;
     </Box>
   );
 };
