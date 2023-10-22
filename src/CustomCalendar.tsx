@@ -7,14 +7,6 @@ const CustomCalendar = () => {
   const [selected, setSelected] = useState<Date[]>([]);
   const [indicated, setIndicated] = useState<Date[]>([]);
 
-  useEffect(() => {
-    console.log("selected is now: ", selected);
-  }, [selected]);
-
-  useEffect(() => {
-    console.log("indicated is now: ", indicated);
-  }, [indicated]);
-
   const handleSelected = (inputDate: Date) => {
     // check if the clicked inputDate is in Selected or Indicated
     const isSelected = selected.some((s) => dayjs(inputDate).isSame(s, "date"));
@@ -35,7 +27,6 @@ const CustomCalendar = () => {
         (s) => !dayjs(inputDate).isSame(s, "date")
       );
       setSelected(newSelected);
-      console.log("Add to indicated array");
       setIndicated([...indicated, inputDate]);
     } else if (isIndicated) {
       console.log("indicated -> null");
