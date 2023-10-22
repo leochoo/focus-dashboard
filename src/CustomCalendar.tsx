@@ -44,9 +44,12 @@ const CustomCalendar = () => {
       dayjs(date).isSame(ind, "date")
     );
 
+    // Check if the date is today
+    const isToday = dayjs().isSame(date, "date");
+
     return (
       <Indicator size={6} color="red" offset={-2} disabled={!isDayIndicated}>
-        <div>{day}</div>
+        <div style={isToday ? { border: "2px solid red" } : {}}>{day}</div>
       </Indicator>
     );
   };
