@@ -7,6 +7,10 @@ const CustomCalendar = () => {
   const [selected, setSelected] = useState<Date[]>([]);
   const [indicated, setIndicated] = useState<Date[]>([]);
 
+  const [value, setValue] = useState<[Date | null, Date | null]>([null, null]);
+  var minDate = 0;
+  var maxDate = 0;
+
   const [targetDates, setTargetDates] = useState<Date[]>([]);
   const [targetDateMode, toggleTargetDateMode] = useState(false);
 
@@ -24,6 +28,7 @@ const CustomCalendar = () => {
     const isTargetDate = targetDates.some((s) => dayjs(inputDate).isSame(s));
 
     console.log("isSelected: ", isSelected, "isIndicated: ", isIndicated);
+    console.log(value);
 
     if (targetDateMode) {
       if (!isTargetDate) {
@@ -86,6 +91,45 @@ const CustomCalendar = () => {
     );
   };
 
+  function CustomDatePicker({targetDateMode}){
+    if (targetDateMode){
+      return <DatePicker
+          type="range"
+          numberOfColumns={2}
+          value={value}
+          renderDay={renderDay}
+          onChange={setValue}
+          getDayProps={(date) => ({
+            onClick: () => handleSelected(date),
+          })}
+        />;
+    }
+
+    if (value[0] != null && value[1] != null){
+      return <DatePicker
+        type="multiple"
+        numberOfColumns={2}
+        value={selected}
+        renderDay={renderDay}
+        minDate={value[0]}
+        maxDate={value[1]}
+        getDayProps={(date) => ({
+          onClick: () => handleSelected(date),
+        })}
+      />
+    }
+
+    return <DatePicker
+      type="multiple"
+      numberOfColumns={2}
+      value={selected}
+      renderDay={renderDay}
+      getDayProps={(date) => ({
+        onClick: () => handleSelected(date),
+      })}
+    />
+  }
+
   return (
     <Box>
       {/* <Button onClick={() => toggleTargetDateMode(!targetDateMode)}>
@@ -99,14 +143,8 @@ const CustomCalendar = () => {
         onChange={(event) => toggleTargetDateMode(event.currentTarget.checked)}
       />
 
-      <DatePicker
-        type="multiple"
-        numberOfColumns={2}
-        value={selected}
-        renderDay={renderDay}
-        getDayProps={(date) => ({
-          onClick: () => handleSelected(date),
-        })}
+      <CustomDatePicker
+        targetDateMode={targetDateMode}
       />
     </Box>
   );
