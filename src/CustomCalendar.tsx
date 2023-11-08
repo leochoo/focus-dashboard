@@ -12,7 +12,7 @@ const CustomCalendar = () => {
 
   const handleSelected = (inputDate: Date) => {
     if (isTargetDateMode) {
-      setTargetDate(inputDate);
+      setTargetDates(inputDate);
       setIsTargetDateMode(false); // Optional: Exit Target Date Mode
       return;
     }
