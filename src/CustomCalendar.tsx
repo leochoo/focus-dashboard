@@ -1,13 +1,22 @@
 import dayjs from "dayjs";
 import React, { useEffect, useState } from "react";
-import { Box, Indicator } from "@mantine/core";
+import { Box, Button, Indicator } from "@mantine/core";
 import { DatePicker } from "@mantine/dates";
 
 const CustomCalendar = () => {
   const [selected, setSelected] = useState<Date[]>([]);
   const [indicated, setIndicated] = useState<Date[]>([]);
 
+  const [targetDates, setTargetDates] = useState<Date[]>([]);
+  const [isTargetDateMode, setIsTargetDateMode] = useState(false);
+
   const handleSelected = (inputDate: Date) => {
+    if (isTargetDateMode) {
+      setTargetDate(inputDate);
+      setIsTargetDateMode(false); // Optional: Exit Target Date Mode
+      return;
+    }
+
     // check if the clicked inputDate is in Selected or Indicated
     const isSelected = selected.some((s) => dayjs(inputDate).isSame(s, "date"));
     const isIndicated = indicated.some((s) =>
@@ -56,6 +65,10 @@ const CustomCalendar = () => {
 
   return (
     <Box>
+      <Button onClick={() => setIsTargetDateMode(!isTargetDateMode)}>
+        {isTargetDateMode ? "Exit Target Date Mode" : "Enter Target Date Mode"}
+      </Button>
+
       <DatePicker
         type="multiple"
         numberOfColumns={2}
